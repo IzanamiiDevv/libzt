@@ -1,0 +1,28 @@
+name: Build Android AAR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build AAR
+        run: ./build.sh android-aar "release"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: libzt-aar
+          path: dist/**/*.aar
